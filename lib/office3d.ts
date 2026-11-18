@@ -11,12 +11,12 @@ renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
 renderer.shadowMap.enabled = true;
 renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 renderer.outputColorSpace = THREE.SRGBColorSpace;
-renderer.toneMapping = THREE.ACESFilmicToneMapping;
-renderer.toneMappingExposure = 1.08;
+renderer.toneMapping = THREE.NeutralToneMapping;
+renderer.toneMappingExposure = 1.2;
 wrap.insertBefore(renderer.domElement, overlay);
 
 const scene = new THREE.Scene();
-scene.background = new THREE.Color('#BFE6F2');
+scene.background = new THREE.Color('#D3F0F8');
 const cam = new THREE.OrthographicCamera(-1, 1, 1, -1, 0.1, 200);
 cam.position.set(15, 17, 19);
 cam.lookAt(-0.6, 0, 0.4);
@@ -35,8 +35,9 @@ function resize() {
 window.addEventListener('resize', resize);
 resize();
 
-scene.add(new THREE.HemisphereLight('#FFFFFF', '#ECE6DA', 1.2));
-const sun = new THREE.DirectionalLight('#FFF4E2', 1.9);
+scene.add(new THREE.HemisphereLight('#FFFFFF', '#F4EFE6', 1.9));
+scene.add(new THREE.AmbientLight('#FFFFFF', 0.55));
+const sun = new THREE.DirectionalLight('#FFF8EE', 2.4);
 sun.position.set(7, 16, 9);
 sun.castShadow = true;
 sun.shadow.mapSize.set(2048, 2048);
@@ -83,9 +84,9 @@ for (let i = 0; i < 300; i++) {
   d.position.set(-9.8 + Math.random() * 19.6, 0.022, -0.9 + Math.random() * 7.8);
   scene.add(d);
 }
-box(20.6, 3, 0.3, '#F4F1EC', 0, 1.5, -7.15);
-box(0.3, 3, 6.3, '#F4F1EC', -10.15, 1.5, -4.15);
-box(0.3, 3, 8, '#9FD3E6', -10.15, 1.5, 3);
+box(20.6, 3, 0.3, '#FBFAF7', 0, 1.5, -7.15);
+box(0.3, 3, 6.3, '#FBFAF7', -10.15, 1.5, -4.15);
+box(0.3, 3, 8, '#B5DDEC', -10.15, 1.5, 3);
 box(20.6, 0.12, 0.32, '#E2DDD4', 0, 3.02, -7.15);
 // windows (cafeteria)
 for (const wx of [1.6, 4.9, 8.2]) {
@@ -222,7 +223,7 @@ plant(-0.3, 6.4, 1.0);
 plant(-9.4, 6.4, 1.0);
 
 // ---------- outdoors ----------
-const ground = new THREE.Mesh(new THREE.PlaneGeometry(120, 120), M('#A9D8A0'));
+const ground = new THREE.Mesh(new THREE.PlaneGeometry(120, 120), M('#B8E3AE'));
 ground.rotation.x = -Math.PI / 2; ground.position.y = -0.31; ground.receiveShadow = true; scene.add(ground);
 for (let i = 0; i < 160; i++) {
   const g = new THREE.Mesh(new THREE.CircleGeometry(0.5 + Math.random() * 1.2, 7), M(['#9DCF94', '#B5DFA9', '#A2D49A'][i % 3]));
