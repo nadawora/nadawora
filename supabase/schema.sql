@@ -1,5 +1,6 @@
--- 나다워라(nadawora) 데이터베이스
+-- 나다워라(NADAWORA) 1.0 데이터베이스
 -- Supabase → SQL Editor → New query 에 이 파일 전체를 붙여넣고 Run 하세요.
+-- 여러 번 실행해도 안전해요(이미 있는 표·데이터는 지우지 않아요).
 -- 구조: 워크스페이스(회사) → 구성원(사람·AI) → 주제·목표·습관·퀘스트·회고·다이어트·아이디어·업무
 -- 나중에 다른 사람을 초대하거나 서비스로 키워도 그대로 쓸 수 있게 모든 데이터에 workspace_id 가 붙어 있어요.
 
@@ -91,6 +92,15 @@ create table if not exists public.quests (
   created_at timestamptz not null default now()
 );
 create index if not exists quests_date on public.quests(workspace_id, quest_date);
+
+-- 같은 날짜에 메인 퀘스트는 하나만. 예전 데이터에 메인이 여러 개 있으면 가장 먼저 만든 것만 메인으로 두고
+-- 나머지는 서브로 바꿔요(지우지 않아요).
+with ranked as (
+  select id, row_number() over (partition by member_id, quest_date order by created_at, id) as rn
+  from public.quests where kind = 'main' and status <> 'dropped'
+)
+update public.quests q set kind = 'sub' from ranked r where q.id = r.id and r.rn > 1;
+create unique index if not exists quests_one_main_per_day on public.quests(member_id, quest_date) where kind = 'main' and status <> 'dropped';
 
 -- ───────── 회고 ─────────
 create table if not exists public.retros (
@@ -191,6 +201,8 @@ begin
 end $$;
 
 -- ───────── 첫 로그인 때 기본 데이터 만들기 ─────────
+-- 1.0: AI 직원은 만들지 않아요(초기 0명). 이미 만들어진 AI 구성원 데이터는 지우지 않아요.
+-- 가입 제한: 주인(대표) 계정이 한 명 생긴 뒤에는 다른 사람이 로그인해도 워크스페이스를 만들 수 없어요.
 create or replace function public.bootstrap_workspace()
 returns uuid language plpgsql security definer set search_path = public as $$
 declare
@@ -201,15 +213,13 @@ begin
   select workspace_id into ws from public.members where user_id = auth.uid() limit 1;
   if ws is not null then return ws; end if;
 
+  if exists (select 1 from public.members where kind = 'human' and is_owner and user_id is not null) then
+    raise exception 'sign-up closed' using hint = '이 서비스는 주인 계정 한 명만 쓸 수 있어요.';
+  end if;
+
   insert into public.workspaces(name) values ('나다워라') returning id into ws;
   insert into public.members(workspace_id, kind, user_id, name, role, is_owner, color)
     values (ws, 'human', auth.uid(), '대표', '대표', true, '#191F28') returning id into me;
-  insert into public.members(workspace_id, kind, name, role, ai_model, color) values
-    (ws, 'ai', '비서·코치', '비서·코치', 'claude', '#E8590C'),
-    (ws, 'ai', '매니저', '매니저', 'claude', '#3B5BDB'),
-    (ws, 'ai', '직원 1', '직원', 'gpt', '#2F9E44'),
-    (ws, 'ai', '직원 2', '직원', 'gpt', '#7048E8'),
-    (ws, 'ai', '감사', '감사', 'claude', '#495057');
 
   insert into public.topics(workspace_id, name, color, sort) values (ws, '건강·다이어트', '#2F9E44', 1) returning id into t_health;
   insert into public.topics(workspace_id, name, color, sort) values (ws, '일·커리어', '#3B5BDB', 2) returning id into t_work;
@@ -228,3 +238,4 @@ end $$;
 
 grant execute on function public.bootstrap_workspace() to authenticated;
 grant execute on function public.is_member(uuid) to authenticated;
+revoke execute on function public.bootstrap_workspace() from anon, public;

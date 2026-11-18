@@ -38,7 +38,10 @@ export function WorkspaceProvider({ children }: { children: ReactNode }) {
     let { data: mem } = await db.from('members').select('id, workspace_id').eq('user_id', user.id).eq('kind', 'human').limit(1).maybeSingle();
     if (!mem) {
       const { error: e } = await db.rpc('bootstrap_workspace');
-      if (e) { setError('처음 설정 중 문제가 생겼어요: ' + e.message); return; }
+      if (e) {
+        if (/sign-up closed/.test(e.message)) { setError('이 사이트는 주인 계정만 쓸 수 있어요. 다른 계정으로는 가입할 수 없어요.'); return; }
+        setError('처음 설정 중 문제가 생겼어요: ' + e.message); return;
+      }
       const again = await db.from('members').select('id, workspace_id').eq('user_id', user.id).eq('kind', 'human').limit(1).maybeSingle();
       mem = again.data;
     }
@@ -60,7 +63,11 @@ export function WorkspaceProvider({ children }: { children: ReactNode }) {
     setState({ ...state, topics: (data || []) as Topic[] });
   }, [state]);
 
-  if (error) return <div className="center-msg"><div className="card"><h2>설정이 필요해요</h2><p className="mut">{error}</p></div></div>;
+  if (error) return (
+    <div className="center-msg"><div className="card"><h2>들어갈 수 없어요</h2><p className="mut">{error}</p>
+      {isConfigured() && <button className="btn ghost sm" onClick={() => sb().auth.signOut()}>로그아웃</button>}
+    </div></div>
+  );
   if (!state) return <div className="center-msg"><div className="loader" aria-label="불러오는 중"></div></div>;
   return <Ctx.Provider value={{ ...state, reloadTopics, bump: () => setVersion((v) => v + 1), version }}>{children}</Ctx.Provider>;
 }

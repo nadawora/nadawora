@@ -2,8 +2,8 @@ import type { Metadata, Viewport } from 'next';
 import './globals.css';
 
 export const metadata: Metadata = {
-  title: '나다워라',
-  description: 'MAKE IT REAL',
+  title: '나다워라 NADAWORA',
+  description: 'MAKE IT REAL.',
 };
 
 export const viewport: Viewport = {

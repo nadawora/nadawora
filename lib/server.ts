@@ -1,4 +1,5 @@
 import { createClient } from '@supabase/supabase-js';
+import { timingSafeEqual } from 'node:crypto';
 
 export function adminDb() {
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
@@ -7,10 +8,14 @@ export function adminDb() {
   return createClient(url, key, { auth: { persistSession: false, autoRefreshToken: false } });
 }
 
+// 예약 실행(Vercel Cron) 요청인지 확인해요.
+// CRON_SECRET 이 없으면 아무도 통과하지 못해요(예전에는 비어 있으면 누구나 통과하는 문제가 있었어요).
 export function authorized(req: Request) {
   const secret = process.env.CRON_SECRET;
-  if (!secret) return true;
-  return req.headers.get('authorization') === `Bearer ${secret}`;
+  if (!secret || secret.length < 16) return false;
+  const got = Buffer.from(req.headers.get('authorization') || '');
+  const want = Buffer.from(`Bearer ${secret}`);
+  return got.length === want.length && timingSafeEqual(got, want);
 }
 
 export async function slack(text: string, blocks?: unknown[]) {

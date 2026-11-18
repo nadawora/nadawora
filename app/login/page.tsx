@@ -24,14 +24,14 @@ export default function LoginPage() {
     setBusy(true);
     const { error } = await sb().auth.signInWithOtp({ email, options: { emailRedirectTo: window.location.origin } });
     setBusy(false);
-    if (error) setErr(error.message); else setSent(true);
+    if (error) setErr(/signup|not allowed/i.test(error.message) ? '등록된 계정만 로그인할 수 있어요.' : error.message); else setSent(true);
   }
 
   return (
     <div className="center-msg">
       <form className="card" style={{ width: '100%' }} onSubmit={send}>
-        <div style={{ fontSize: 26, fontWeight: 900 }}>나다워라</div>
-        <div className="motto-login">MAKE IT REAL</div>
+        <div style={{ fontSize: 26, fontWeight: 900 }}>나다워라 <span className="mut" style={{ fontSize: 13, fontWeight: 800, letterSpacing: '.12em' }}>NADAWORA</span></div>
+        <div className="motto-login">MAKE IT REAL.</div>
         {sent ? (
           <div className="card flat"><b>메일함을 확인해 주세요</b><span className="mut">{email} 으로 로그인 링크를 보냈어요. 링크를 누르면 바로 들어와요.</span></div>
         ) : (
