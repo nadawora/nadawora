@@ -238,4 +238,6 @@ end $$;
 
 grant execute on function public.bootstrap_workspace() to authenticated;
 grant execute on function public.is_member(uuid) to authenticated;
+-- 로그인하지 않은 사용자(anon)는 두 함수를 실행할 수 없어요.
 revoke execute on function public.bootstrap_workspace() from anon, public;
+revoke execute on function public.is_member(uuid) from anon, public;
