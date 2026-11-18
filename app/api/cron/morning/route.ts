@@ -29,7 +29,7 @@ export async function GET(req: Request) {
     if (habits.data?.length) lines.push(`오늘의 습관 (Mini만 해도 성공): ${habits.data.map((h) => `${h.title} ${h.mini}`).join(' · ')}`);
     if (decisions.count) lines.push(`:bell: 결정을 기다리는 일이 ${decisions.count}건 있어요.`);
     if (lastYear.data) lines.push(`1년 전 오늘의 나: "${(lastYear.data.good || lastYear.data.free || '').slice(0, 80)}"`);
-    lines.push(`<${url}|minadaum 열기>`);
+    lines.push(`<${url}|나다워라 열기>`);
     results.push(await slack(lines.join('\n'), [section(lines.join('\n'))]));
   }
   return Response.json({ ok: true, sent: results.length, results });

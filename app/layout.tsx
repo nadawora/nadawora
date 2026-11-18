@@ -2,7 +2,7 @@ import type { Metadata, Viewport } from 'next';
 import './globals.css';
 
 export const metadata: Metadata = {
-  title: 'minadaum',
+  title: '나다워라',
   description: '나다움을 관리하는 시스템',
 };
 

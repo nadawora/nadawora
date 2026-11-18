@@ -1,4 +1,4 @@
--- minadaum 데이터베이스
+-- 나다워라(nadawora) 데이터베이스
 -- Supabase → SQL Editor → New query 에 이 파일 전체를 붙여넣고 Run 하세요.
 -- 구조: 워크스페이스(회사) → 구성원(사람·AI) → 주제·목표·습관·퀘스트·회고·다이어트·아이디어·업무
 -- 나중에 다른 사람을 초대하거나 서비스로 키워도 그대로 쓸 수 있게 모든 데이터에 workspace_id 가 붙어 있어요.
@@ -201,7 +201,7 @@ begin
   select workspace_id into ws from public.members where user_id = auth.uid() limit 1;
   if ws is not null then return ws; end if;
 
-  insert into public.workspaces(name) values ('minadaum') returning id into ws;
+  insert into public.workspaces(name) values ('나다워라') returning id into ws;
   insert into public.members(workspace_id, kind, user_id, name, role, is_owner, color)
     values (ws, 'human', auth.uid(), '대표', '대표', true, '#191F28') returning id into me;
   insert into public.members(workspace_id, kind, name, role, ai_model, color) values

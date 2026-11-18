@@ -21,7 +21,7 @@ export default function Shell({ children }: { children: ReactNode }) {
   return (
     <div className="app">
       <nav className="side" aria-label="메인 메뉴">
-        <div className="logo">minadaum</div>
+        <div className="logo">나다워라</div>
         {NAV.map((n) => (
           <Link key={n.href} href={n.href} className={'nav' + (on(n.href) ? ' on' : '')}>{n.label}</Link>
         ))}

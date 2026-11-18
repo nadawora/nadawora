@@ -50,7 +50,7 @@ export default function OfficePage() {
   return (
     <>
       <div className="row wrap">
-        <div><div className="mut">일이 있으면 자리에서, 없으면 카페테리아에서 쉬어요</div><h1>minadaum 오피스</h1></div>
+        <div><div className="mut">일이 있으면 자리에서, 없으면 카페테리아에서 쉬어요</div><h1>나다워라 오피스</h1></div>
         <div className="row" style={{ gap: 8 }}>
           <button className="btn dark" onClick={() => setMeeting((v) => !v)}>{meeting ? '회의 끝내기' : '회의 소집'}</button>
           <Link className="btn" href="/tasks">업무 만들기</Link>

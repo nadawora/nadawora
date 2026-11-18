@@ -1,4 +1,4 @@
-# minadaum
+# 나다워라 (nadawora)
 
 나다움을 시스템으로 관리하는 웹사이트. 오늘의 퀘스트, Mini·More·Max 습관, 회고, 1년 전 오늘, 다이어트, 목표, 아이디어 보관함, 업무 대시보드, AI 오피스, 슬랙 알림.
 
@@ -26,19 +26,19 @@
 ### 1. Supabase
 1. 새 프로젝트를 만들어요 (지역: Seoul).
 2. 왼쪽 **SQL Editor** → New query → `supabase/schema.sql` 내용을 전부 붙여넣고 **Run**.
-3. **Authentication → URL Configuration**에서 Site URL을 Vercel 주소(예: `https://minadaum.vercel.app`)로 바꿔요. 로컬에서 쓸 때는 Redirect URLs에 `http://localhost:3000`도 추가해요.
+3. **Authentication → URL Configuration**에서 Site URL을 Vercel 주소(예: `https://nadawora.vercel.app`)로 바꿔요. 로컬에서 쓸 때는 Redirect URLs에 `http://localhost:3000`도 추가해요.
 4. **Project Settings → API Keys**에서 아래 값을 확인해요.
    - Project URL → `NEXT_PUBLIC_SUPABASE_URL`
    - anon (또는 publishable) 키 → `NEXT_PUBLIC_SUPABASE_ANON_KEY`
    - service_role (또는 secret) 키 → `SUPABASE_SERVICE_ROLE_KEY` (절대 공개 금지)
 
 ### 2. 슬랙
-1. https://api.slack.com/apps → Create New App → From scratch → 이름 `minadaum 비서`, 내 워크스페이스 선택.
+1. https://api.slack.com/apps → Create New App → From scratch → 이름 `나다워라 비서`, 내 워크스페이스 선택.
 2. **Incoming Webhooks** 켜기 → Add New Webhook → 알림 받을 채널(예: `#비서-코치`) 선택.
 3. 만들어진 Webhook URL → `SLACK_WEBHOOK_URL`
 
 ### 3. Vercel
-1. Add New → Project → GitHub의 `minadaum` 저장소 Import.
+1. Add New → Project → GitHub의 `nadawora` 저장소 Import.
 2. Environment Variables에 아래 값을 넣고 Deploy.
    - `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY`, `SUPABASE_SERVICE_ROLE_KEY`, `SLACK_WEBHOOK_URL`
    - `CRON_SECRET`: 아무 긴 문자열 (알림 주소를 남이 못 부르게 막는 값)

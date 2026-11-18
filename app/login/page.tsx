@@ -30,7 +30,7 @@ export default function LoginPage() {
   return (
     <div className="center-msg">
       <form className="card" style={{ width: '100%' }} onSubmit={send}>
-        <div style={{ fontSize: 26, fontWeight: 900 }}>minadaum</div>
+        <div style={{ fontSize: 26, fontWeight: 900 }}>나다워라</div>
         <div className="mut">나다움을 관리하는 시스템</div>
         {sent ? (
           <div className="card flat"><b>메일함을 확인해 주세요</b><span className="mut">{email} 으로 로그인 링크를 보냈어요. 링크를 누르면 바로 들어와요.</span></div>
