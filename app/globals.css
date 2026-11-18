@@ -215,3 +215,4 @@ label.f { display: flex; flex-direction: column; gap: 6px; font-size: 13px; font
   .office-empty { font-size: 12px; top: 10px; width: max-content; max-width: 90%; }
 }
 @media (prefers-reduced-motion: reduce) { .ck.on, .xp-pop, .btn.glow, .cleared-badge, .levelup { animation: none !important; } }
+.row > .btn, form.row > .btn { flex-shrink: 0; white-space: nowrap; }

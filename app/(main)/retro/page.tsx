@@ -185,7 +185,7 @@ function RetroInner() {
               <b style={{ fontSize: 13 }}>오늘의 컨디션</b>
               <div className="moods" role="radiogroup" aria-label="오늘의 컨디션">
                 {[1, 2, 3, 4, 5].map((n) => (
-                  <button key={n} role="radio" aria-checked={form.mood === n} className={'mood m' + n + (form.mood === n ? ' on' : '')} onClick={() => setForm({ ...form, mood: form.mood === n ? null : n })}>
+                  <button key={n} role="radio" aria-checked={form.mood === n} className={'mood m' + n + (form.mood === n ? ' on' : '')} onClick={() => setForm((cur) => ({ ...cur, mood: cur.mood === n ? null : n }))}>
                     <b>{n}</b><span>{MOODS[n - 1]}</span>
                   </button>
                 ))}
@@ -195,7 +195,7 @@ function RetroInner() {
           {FIELDS[kind].map((f) => (
             <label key={f.key} className="f">
               <span>{f.label}{f.hint && <span className="mut" style={{ fontWeight: 400 }}> · {f.hint}</span>}</span>
-              <textarea className="in" rows={f.rows} value={form[f.key] || ''} onChange={(e) => setForm({ ...form, [f.key]: e.target.value })}
+              <textarea className="in" rows={f.rows} value={form[f.key] || ''} disabled={!loaded} onChange={(e) => { const v = e.target.value; setForm((cur) => ({ ...cur, [f.key]: v })); }}
                 onKeyDown={(e) => { if ((e.metaKey || e.ctrlKey) && e.key === 'Enter') { e.preventDefault(); save(); } }} />
             </label>
           ))}

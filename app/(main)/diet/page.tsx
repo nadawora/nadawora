@@ -68,22 +68,22 @@ export default function DietPage() {
       <div className="grid2" style={{ alignItems: 'start' }}>
         <section className="card">
           <div className="grid3" style={{ gridTemplateColumns: 'repeat(3, minmax(0, 1fr))', gap: 8 }}>
-            <label className="f">체중(kg)<input className="in" inputMode="decimal" value={form.weight ?? ''} onChange={(e) => setForm({ ...form, weight: e.target.value ? Number(e.target.value) : null })} /></label>
-            <label className="f">걸음<input className="in" inputMode="numeric" value={form.steps ?? ''} onChange={(e) => setForm({ ...form, steps: e.target.value ? Number(e.target.value.replace(/\D/g, '')) : null })} /></label>
+            <label className="f">체중(kg)<input className="in" inputMode="decimal" value={form.weight ?? ''} onChange={(e) => { const v = e.target.value; setForm((cur) => ({ ...cur, weight: v ? Number(v) : null })); }} /></label>
+            <label className="f">걸음<input className="in" inputMode="numeric" value={form.steps ?? ''} onChange={(e) => { const v = e.target.value; setForm((cur) => ({ ...cur, steps: v ? Number(v.replace(/\D/g, '')) : null })); }} /></label>
             <div className="f">물
               <div className="row" style={{ gap: 4 }}>
-                <button className="btn ghost sm" onClick={() => setForm({ ...form, water_cups: Math.max(0, form.water_cups - 1) })} aria-label="한 잔 빼기">−</button>
+                <button className="btn ghost sm" onClick={() => setForm((cur) => ({ ...cur, water_cups: Math.max(0, cur.water_cups - 1) }))} aria-label="한 잔 빼기">−</button>
                 <b>{form.water_cups}잔</b>
-                <button className="btn sm" onClick={() => setForm({ ...form, water_cups: form.water_cups + 1 })} aria-label="한 잔 더하기">+</button>
+                <button className="btn sm" onClick={() => setForm((cur) => ({ ...cur, water_cups: cur.water_cups + 1 }))} aria-label="한 잔 더하기">+</button>
               </div>
             </div>
           </div>
           {MEALS.map(([k, label]) => (
             <label key={k} className="f">{label}
-              <input className="in" value={form.meals?.[k] || ''} onChange={(e) => setForm({ ...form, meals: { ...form.meals, [k]: e.target.value } })} placeholder="무엇을 먹었는지 한 줄" />
+              <input className="in" value={form.meals?.[k] || ''} onChange={(e) => { const v = e.target.value; setForm((cur) => ({ ...cur, meals: { ...cur.meals, [k]: v } })); }} placeholder="무엇을 먹었는지 한 줄" />
             </label>
           ))}
-          <label className="f">메모<textarea className="in" rows={2} value={form.memo || ''} onChange={(e) => setForm({ ...form, memo: e.target.value })} /></label>
+          <label className="f">메모<textarea className="in" rows={2} value={form.memo || ''} onChange={(e) => { const v = e.target.value; setForm((cur) => ({ ...cur, memo: v })); }} /></label>
           <div className="row"><button className="btn" onClick={save}>저장</button><span className="mut" role="status">{saved}</span></div>
         </section>
 
