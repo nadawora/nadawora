@@ -3,7 +3,7 @@ import './globals.css';
 
 export const metadata: Metadata = {
   title: '나다워라',
-  description: '나다움을 관리하는 시스템',
+  description: 'MAKE IT REAL',
 };
 
 export const viewport: Viewport = {

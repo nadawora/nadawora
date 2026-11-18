@@ -131,3 +131,17 @@ label.f { display: flex; flex-direction: column; gap: 6px; font-size: 13px; font
 @media (max-width: 600px) { .bub3d { font-size: 10px; padding: 4px 7px; } }
 
 @media (prefers-reduced-motion: reduce) { * { animation: none !important; transition: none !important; } }
+
+/* motto band */
+.motto { position: relative; overflow: hidden; display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 15px 24px; border-radius: var(--radius); color: #fff; background: linear-gradient(115deg, #142E7A 0%, #1E46B8 45%, #2F5FE0 78%, #6C93FF 100%); box-shadow: 0 8px 24px rgba(30, 70, 184, .18); }
+.motto::after { content: ""; position: absolute; right: -40px; top: -60px; width: 200px; height: 200px; border-radius: 50%; background: radial-gradient(circle, rgba(255,255,255,.22), rgba(255,255,255,0) 70%); pointer-events: none; }
+.motto-brand { display: none; font-weight: 900; font-size: 17px; letter-spacing: -.01em; }
+.motto-text { display: inline-flex; align-items: center; gap: 12px; font-weight: 900; font-size: 15px; letter-spacing: .34em; }
+.motto-text i { display: block; width: 22px; height: 3px; border-radius: 3px; background: #9FD3FF; }
+.motto-login { font-weight: 900; font-size: 13px; letter-spacing: .32em; color: var(--blue); }
+@media (max-width: 899px) {
+  .motto { padding: 13px 18px; }
+  .motto-brand { display: block; }
+  .motto-text { font-size: 12px; letter-spacing: .26em; gap: 8px; }
+  .motto-text i { width: 14px; }
+}

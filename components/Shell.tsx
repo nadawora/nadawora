@@ -33,7 +33,13 @@ export default function Shell({ children }: { children: ReactNode }) {
           <button className="btn ghost sm" onClick={() => sb().auth.signOut()}>로그아웃</button>
         </div>
       </nav>
-      <main className="main">{children}</main>
+      <main className="main">
+        <header className="motto" aria-label="나다워라의 표어">
+          <span className="motto-brand">나다워라</span>
+          <span className="motto-text"><i aria-hidden="true" />MAKE IT REAL</span>
+        </header>
+        {children}
+      </main>
       <nav className="tabbar" aria-label="하단 메뉴">
         {NAV.map((n) => (
           <Link key={n.href} href={n.href} className={on(n.href) ? 'on' : ''}>
