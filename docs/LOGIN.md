@@ -11,7 +11,7 @@
    do $$
    declare t text;
    begin
-     foreach t in array array['workspaces','members','topics','goals','habits','habit_logs','quests','retros','diet_logs','ideas','tasks','decisions'] loop
+     foreach t in array array['workspaces','members','topics','goals','habits','habit_logs','quests','quest_todos','retros','diet_logs','ideas','tasks','decisions'] loop
        execute format('drop policy if exists "open mode" on public.%I', t);
      end loop;
    end $$;

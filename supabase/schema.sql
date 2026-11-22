@@ -241,3 +241,22 @@ grant execute on function public.is_member(uuid) to authenticated;
 -- 로그인하지 않은 사용자(anon)는 두 함수를 실행할 수 없어요.
 revoke execute on function public.bootstrap_workspace() from anon, public;
 revoke execute on function public.is_member(uuid) from anon, public;
+
+-- 2026-11-22 퀘스트 상세 설명과 하위 할 일 목록
+alter table public.quests add column if not exists note text;
+create table if not exists public.quest_todos (
+  id uuid primary key default gen_random_uuid(),
+  workspace_id uuid not null references public.workspaces(id) on delete cascade,
+  quest_id uuid not null references public.quests(id) on delete cascade,
+  title text not null,
+  done boolean not null default false,
+  sort int not null default 0,
+  created_at timestamptz not null default now()
+);
+create index if not exists quest_todos_quest on public.quest_todos(quest_id, sort);
+alter table public.quest_todos enable row level security;
+drop policy if exists "member access" on public.quest_todos;
+create policy "member access" on public.quest_todos for all to authenticated using (public.is_member(workspace_id)) with check (public.is_member(workspace_id));
+-- 임시 공개 모드에서만 필요한 정책 (docs/LOGIN.md 참고)
+drop policy if exists "open mode" on public.quest_todos;
+create policy "open mode" on public.quest_todos for all to anon using (true) with check (true);

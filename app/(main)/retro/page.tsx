@@ -4,7 +4,7 @@ import { Suspense, useCallback, useEffect, useRef, useState } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { sb } from '@/lib/supabase';
 import { useWs } from '@/lib/workspace';
-import { todayKST, weekStart, monthStart, monthEnd, addDays, fmtShort, fmtLong, weekNumber } from '@/lib/date';
+import { todayKST, weekStart, monthStart, monthEnd, addDays, addYears, fmtShort, fmtLong, weekNumber } from '@/lib/date';
 import type { Quest, Retro } from '@/lib/types';
 
 type Kind = 'daily' | 'weekly' | 'monthly';
@@ -148,7 +148,8 @@ function RetroInner() {
   return (
     <>
       <div className="row wrap">
-        <div><div className="mut">{periodLabel(kind, period)}</div><h1>{KIND_LABEL[kind]} 회고</h1></div>
+        <div><div className="mut">{periodLabel(kind, period)}</div><h1>{kind === 'daily' ? '다이어리' : `${KIND_LABEL[kind]} 회고`}</h1></div>
+        {kind === 'daily' && <Link className="btn ghost sm" href={`/past?d=${addYears(date, -1)}`}>1년 전 오늘</Link>}
         <div className="tabs" role="tablist" aria-label="회고 종류">
           {(['daily', 'weekly', 'monthly'] as Kind[]).map((k) => (
             <button key={k} role="tab" aria-selected={kind === k} className={'tab' + (kind === k ? ' on' : '')} onClick={() => go(() => setKind(k))}>{KIND_LABEL[k]}</button>

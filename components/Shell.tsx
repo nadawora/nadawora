@@ -4,16 +4,12 @@ import { usePathname } from 'next/navigation';
 import { ReactNode } from 'react';
 import { sb, OPEN_MODE } from '@/lib/supabase';
 import { useWs } from '@/lib/workspace';
-import IdeaFab from './IdeaFab';
 
-// 1.0 메뉴. 보류 기능(업무 대시보드 등)은 코드는 그대로 두고 메뉴에서만 숨겨요. docs/PRODUCT_BACKLOG.md 참고.
+// 0단계 메뉴: 퀘스트와 다이어리만. 나머지 화면(나다움오피, 목표·습관, 아이디어, 다이어트, 1년 전 오늘)은 코드는 두고 메뉴에서만 숨겨요.
 const NAV = [
-  { href: '/', label: '오늘', icon: 'M4 11l8-7 8 7v9H4z' },
-  { href: '/retro', label: '회고', icon: 'M5 4h14v16H5zM9 9h6M9 13h6' },
-  { href: '/office', label: '나다움오피', icon: 'M3 21V9l9-6 9 6v12M9 21v-6h6v6' },
-  { href: '/goals', label: '목표·습관', icon: 'M12 3l2.6 5.6 6 .7-4.5 4.1 1.2 6L12 16.4 6.7 19.4l1.2-6L3.4 9.3l6-.7z' },
-  { href: '/ideas', label: '아이디어', icon: 'M9 18h6M10 21h4M12 3a6 6 0 0 0-3.5 10.9V16h7v-2.1A6 6 0 0 0 12 3z' },
-];
+  { href: '/', label: '퀘스트', icon: 'M5 4h14v16H5zM9 9l2 2 4-4M9 15h6' },
+  { href: '/retro', label: '다이어리', icon: 'M6 3h11a2 2 0 0 1 2 2v16H6a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2zM8 8h8M8 12h8M8 16h5' },
+]
 
 export default function Shell({ children }: { children: ReactNode }) {
   const path = usePathname();
@@ -26,8 +22,6 @@ export default function Shell({ children }: { children: ReactNode }) {
         {NAV.map((n) => (
           <Link key={n.href} href={n.href} className={'nav' + (on(n.href) ? ' on' : '')}>{n.label}</Link>
         ))}
-        <Link href="/diet" className={'nav' + (on('/diet') ? ' on' : '')}>다이어트</Link>
-        <Link href="/past" className={'nav' + (on('/past') ? ' on' : '')}>1년 전 오늘</Link>
         {!OPEN_MODE && (
           <div className="foot">
             <span>{email}</span>
@@ -50,7 +44,6 @@ export default function Shell({ children }: { children: ReactNode }) {
           </Link>
         ))}
       </nav>
-      <IdeaFab />
     </div>
   );
 }
