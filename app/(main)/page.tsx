@@ -20,6 +20,7 @@ export default function QuestBoardPage() {
     : open.length > 0 ? `남은 퀘스트 ${open.length}개`
     : done.length > 0 ? '퀘스트를 모두 깼어요!'
     : future ? '이날 할 퀘스트를 미리 적어 두세요'
+    : date < b.today ? '이날은 기록된 퀘스트가 없어요'
     : '오늘의 퀘스트를 적어 볼까요?';
 
   async function add(e: FormEvent) {
@@ -157,7 +158,7 @@ function QuestCard({ q, todos, expanded, onToggle, b }: { q: Quest; todos: Quest
           </div>
 
           <div className="qactions">
-            <button className="qbtn main" onClick={clear}>퀘스트 깨기</button>
+            <button className="qbtn go" onClick={clear}>퀘스트 깨기</button>
             {q.carried_count >= 3 && <button className="qbtn" onClick={() => b.dropQuest(q)}>내려놓기</button>}
             <button className="qbtn danger" onClick={() => { if (confirm(`'${q.title}' 퀘스트를 삭제할까요? 할 일 목록도 함께 지워져요.`)) b.removeQuest(q); }}>삭제</button>
           </div>
@@ -203,7 +204,7 @@ function LevelUp({ lv, onClose }: { lv: number; onClose: () => void }) {
         <div className="lvup-rays" aria-hidden="true" />
         <small>LEVEL UP</small>
         <b>Lv.{lv}</b>
-        <span>{lv === 1 ? '첫 퀘스트를 깼어요!' : lv < 5 ? '좋아요, 이 흐름 그대로!' : '계획하는 근육이 붙고 있어요'}</span>
+        <span>{lv === 1 ? '첫 걸음을 뗐어요!' : lv < 5 ? '좋아요, 이 흐름 그대로!' : '계획하는 근육이 붙고 있어요'}</span>
       </div>
     </div>
   );
