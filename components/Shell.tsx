@@ -2,7 +2,7 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { ReactNode } from 'react';
-import { sb } from '@/lib/supabase';
+import { sb, OPEN_MODE } from '@/lib/supabase';
 import { useWs } from '@/lib/workspace';
 import IdeaFab from './IdeaFab';
 
@@ -28,10 +28,12 @@ export default function Shell({ children }: { children: ReactNode }) {
         ))}
         <Link href="/diet" className={'nav' + (on('/diet') ? ' on' : '')}>다이어트</Link>
         <Link href="/past" className={'nav' + (on('/past') ? ' on' : '')}>1년 전 오늘</Link>
-        <div className="foot">
-          <span>{email}</span>
-          <button className="btn ghost sm" onClick={() => sb().auth.signOut()}>로그아웃</button>
-        </div>
+        {!OPEN_MODE && (
+          <div className="foot">
+            <span>{email}</span>
+            <button className="btn ghost sm" onClick={() => sb().auth.signOut()}>로그아웃</button>
+          </div>
+        )}
       </nav>
       <main className="main">
         <header className="motto" aria-label="나다워라의 표어">

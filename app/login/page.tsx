@@ -1,7 +1,7 @@
 'use client';
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { sb, isConfigured } from '@/lib/supabase';
+import { sb, isConfigured, OPEN_MODE } from '@/lib/supabase';
 
 export default function LoginPage() {
   const router = useRouter();
@@ -11,6 +11,7 @@ export default function LoginPage() {
   const [busy, setBusy] = useState(false);
 
   useEffect(() => {
+    if (OPEN_MODE) { router.replace('/'); return; }
     if (!isConfigured()) return;
     sb().auth.getSession().then(({ data }) => { if (data.session) router.replace('/'); });
     const { data: sub } = sb().auth.onAuthStateChange((_e, s) => { if (s) router.replace('/'); });

@@ -13,6 +13,10 @@ export function sb(): SupabaseClient {
   return client;
 }
 
+// 임시 공개 모드: 로그인 없이 주인 워크스페이스를 바로 열어요. Vercel 환경 변수 NEXT_PUBLIC_OPEN_MODE=1 일 때만 켜져요.
+// 로그인을 다시 켤 때는 이 변수를 지우고, Supabase의 "open mode" 정책을 지우면 돼요(docs/LOGIN.md).
+export const OPEN_MODE = process.env.NEXT_PUBLIC_OPEN_MODE === '1';
+
 export function isConfigured() {
   return Boolean(process.env.NEXT_PUBLIC_SUPABASE_URL && process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY);
 }

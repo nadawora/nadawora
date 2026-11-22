@@ -1,7 +1,7 @@
 'use client';
 import { createContext, useCallback, useContext, useEffect, useState, ReactNode } from 'react';
 import { useRouter } from 'next/navigation';
-import { sb, isConfigured } from './supabase';
+import { sb, isConfigured, OPEN_MODE } from './supabase';
 import type { Topic } from './types';
 
 interface Ws {
@@ -32,6 +32,15 @@ export function WorkspaceProvider({ children }: { children: ReactNode }) {
   const load = useCallback(async () => {
     if (!isConfigured()) { setError('아직 Supabase가 연결되지 않았어요. README의 연결 순서를 따라 환경 변수를 넣어 주세요.'); return; }
     const db = sb();
+    if (OPEN_MODE) {
+      // 로그인 없이: 주인 구성원(대표)의 워크스페이스를 그대로 써요.
+      const { data: owner, error: oe } = await db.from('members').select('id, workspace_id').eq('kind', 'human').eq('is_owner', true).order('created_at').limit(1).maybeSingle();
+      if (oe) { setError('불러오는 중 문제가 생겼어요: ' + oe.message); return; }
+      if (!owner) { setError('주인 워크스페이스가 아직 없어요. 한 번은 로그인해서 만들어야 해요.'); return; }
+      const { data: topics } = await db.from('topics').select('id, name, color, sort').eq('workspace_id', owner.workspace_id).order('sort');
+      setState({ userId: '', email: '', wsId: owner.workspace_id, memberId: owner.id, topics: (topics || []) as Topic[] });
+      return;
+    }
     const { data: s } = await db.auth.getSession();
     const user = s.session?.user;
     if (!user) { router.replace('/login'); return; }
@@ -52,7 +61,7 @@ export function WorkspaceProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     load();
-    if (!isConfigured()) return;
+    if (!isConfigured() || OPEN_MODE) return;
     const { data: sub } = sb().auth.onAuthStateChange((ev) => { if (ev === 'SIGNED_OUT') router.replace('/login'); });
     return () => sub.subscription.unsubscribe();
   }, [load, router]);
@@ -65,7 +74,7 @@ export function WorkspaceProvider({ children }: { children: ReactNode }) {
 
   if (error) return (
     <div className="center-msg"><div className="card"><h2>들어갈 수 없어요</h2><p className="mut">{error}</p>
-      {isConfigured() && <button className="btn ghost sm" onClick={() => sb().auth.signOut()}>로그아웃</button>}
+      {isConfigured() && !OPEN_MODE && <button className="btn ghost sm" onClick={() => sb().auth.signOut()}>로그아웃</button>}
     </div></div>
   );
   if (!state) return <div className="center-msg"><div className="loader" aria-label="불러오는 중"></div></div>;
